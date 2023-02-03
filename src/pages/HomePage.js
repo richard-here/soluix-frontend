@@ -1,41 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, React } from 'react';
 import {
-  Box, Toolbar, Typography, useTheme, TableContainer, Table, TableHead, TableRow, TableBody, TableCell, Stack, Button, Pagination, Paper,
+  Box, Toolbar, Typography, useTheme,
+  TableContainer, Table, TableHead, TableRow, TableBody,
+  TableCell, Stack, Button, Pagination, Paper,
+  CircularProgress, IconButton,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { formatCurrency, mapStatus } from '../utils';
+import getProductList from '../data/api';
 
 function NotFoundPage() {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handlePaginationChange = (_, value) => {
     setPage(value);
+    setIsLoading(true);
   };
 
   useEffect(() => {
-    setProducts(
-      [
-        {code: '1', name: 'Meja A', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '2', name: 'Meja B', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '3', name: 'Meja C', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '4', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '5', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '6', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '7', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '8', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '9', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-        {code: '10', name: 'Meja D', subcategory: 'Furniture', brand: 'Xiaomi', retail_price: 10000000, status: true},
-      ]
+    getProductList({ page, limit: 10 }).then((data) => {
+      setTotalPages(data.data.data.total_pages);
+      setIsLoading(false);
+      setProducts(data.data.data.rows);
+    });
+  }, [page]);
+
+  if (isLoading) {
+    return (
+      <Stack justifyContent="center" alignItems="center" flexGrow={1}>
+        <CircularProgress />
+      </Stack>
     );
-    setTotalPages(100);
-  }, []);
-  
+  }
+
+  if (products.length === 0 && !isLoading) {
+    return <Typography sx={{ textAlign: 'center' }}>Error loading, please reload page</Typography>;
+  }
+
   return (
     <Box sx={{ flexGrow: 1, background: '#f2f7ff', p: 4 }}>
       <Toolbar />
-      <Typography variant='h2' sx={{ fontSize: '1.5em', pb: 4, fontWeight: 'bold' }}>Product</Typography>
+      <Typography variant="h2" sx={{ fontSize: '1.5em', pb: 4, fontWeight: 'bold' }}>Product</Typography>
       <Paper sx={{ p: 2 }}>
         <Typography sx={{ pb: 3 }}>Product List</Typography>
         <Stack sx={{ pb: 3 }} direction="row" justifyContent="space-between">
@@ -50,22 +59,22 @@ function NotFoundPage() {
                   bgcolor: '#F7F7F7',
                 }}
               >
-                <TableCell sx={{fontWeight: 'bold'}}>PRODUCT CODE</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}}>PRODUCT NAME</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}}>SUB CATEGORY</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}} align="center">BRAND</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}} align="center">RETAIL PRICE</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}} align="center">STATUS</TableCell>
-                <TableCell sx={{fontWeight: 'bold'}} align="center">ACTION</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>PRODUCT CODE</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>PRODUCT NAME</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>SUB CATEGORY</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }} align="center">BRAND</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }} align="center">RETAIL PRICE</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }} align="center">STATUS</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }} align="center">ACTION</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {products.map((product) => (
                 <TableRow
                   key={product.code}
-                  sx={{ 
+                  sx={{
                     '&:last-child td, &:last-child th': { border: 0 },
-                    '&:nth-of-type(even)': { bgcolor: '#F7F7F7' }
+                    '&:nth-of-type(even)': { bgcolor: '#F7F7F7' },
                   }}
                 >
                   <TableCell component="th" scope="row">
@@ -76,21 +85,35 @@ function NotFoundPage() {
                   <TableCell align="center">{product.brand}</TableCell>
                   <TableCell align="right">{formatCurrency(product.retail_price)}</TableCell>
                   <TableCell align="center">{mapStatus(product.status)}</TableCell>
-                  <TableCell align="center"></TableCell>
+                  <TableCell align="center">
+                    <IconButton>
+                      <EditIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-        <Pagination sx={{
-            pt: 5, justifyContent: 'flex-end', display: 'flex',
+        <Pagination
+          sx={{
+            pt: 5,
+            justifyContent: 'flex-end',
+            display: 'flex',
             '& li .Mui-selected': {
               backgroundColor: theme.palette.primary.main,
               border: 'none',
               color: theme.palette.primary.contrastText,
             },
-          }} page={page} onChange={handlePaginationChange} color="primary"
-          count={totalPages} siblingCount={1} shape="rounded" variant="outlined" />
+          }}
+          page={page}
+          onChange={handlePaginationChange}
+          color="primary"
+          count={totalPages}
+          siblingCount={1}
+          shape="rounded"
+          variant="outlined"
+        />
       </Paper>
     </Box>
   );

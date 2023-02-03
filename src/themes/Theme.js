@@ -4,7 +4,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#2966c4',
-      contrastText: '#fff' 
+      contrastText: '#fff',
     },
   },
   breakpoints: {
@@ -27,18 +27,18 @@ theme.typography.h1 = {
   [theme.breakpoints.down('sm')]: {
     fontSize: '1.2em',
   },
-}
+};
 
 theme.typography.h2 = {
   fontSize: '1.5em',
   [theme.breakpoints.down('sm')]: {
     fontSize: '1.2em',
-  }
-}
+  },
+};
 
 theme.typography.caption = {
   fontSize: '0.8em',
   color: 'grey',
-}
+};
 
 export default theme;

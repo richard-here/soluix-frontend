@@ -1,9 +1,5 @@
-const formatCurrency = (money) => {
-  return new Intl.NumberFormat('id').format(money);
-};
+const formatCurrency = (money) => new Intl.NumberFormat('id').format(money);
 
-const mapStatus = (status) => {
-  return status ? 'Active' : 'Inactive';
-};
+const mapStatus = (status) => (status ? 'Active' : 'Inactive');
 
 export { formatCurrency, mapStatus };

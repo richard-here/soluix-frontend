@@ -1,13 +1,17 @@
 import './styles/style.css';
 import { Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
-import { ThemeProvider, IconButton, AppBar, Toolbar, Typography, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Stack, CssBaseline } from '@mui/material';
-import HomePage from './pages/HomePage';
-import theme from './themes/Theme';
-import NotFoundPage from './pages/NotFoundPage';
+import { React, useState } from 'react';
+import {
+  ThemeProvider, IconButton, AppBar,
+  Toolbar, Typography, Drawer, List, ListItem,
+  ListItemButton, ListItemIcon, ListItemText, Box, Stack, CssBaseline,
+} from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import CategoryIcon from '@mui/icons-material/Category';
 import MenuIcon from '@mui/icons-material/Menu';
+import HomePage from './pages/HomePage';
+import theme from './themes/Theme';
+import NotFoundPage from './pages/NotFoundPage';
 
 const drawerWidth = 240;
 
@@ -29,7 +33,7 @@ const drawer = (
       </List>
     </Box>
   </div>
-)
+);
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -42,16 +46,21 @@ function App() {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', height: '100vh' }} className="app-container">
         <CssBaseline />
-        <AppBar elevation={0} sx={{ borderBottom: '1px solid rgba(224, 224, 224, 1)', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+        <AppBar elevation={0} sx={{ borderBottom: '1px solid rgba(224, 224, 224, 1)', zIndex: (appTheme) => appTheme.zIndex.drawer + 1 }}>
           <Toolbar sx={{ backgroundColor: 'white', color: 'black' }}>
             <IconButton
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: 'block', 'md': 'none', 'lg': 'none', 'xl': 'none' } }}
+              sx={{
+                mr: 2,
+                display: {
+                  sm: 'block', md: 'none', lg: 'none', xl: 'none',
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>
-            <Stack sx={{flexGrow: 1}} direction="row" alignItems="center">
+            <Stack sx={{ flexGrow: 1 }} direction="row" alignItems="center">
               <Box
                 sx={{ flexGrow: 1, maxWidth: 50 }}
                 component="img"
@@ -61,7 +70,7 @@ function App() {
               <Typography variant="h1" sx={{ fontSize: '1.5em', fontWeight: 'bold', color: '#ca373c' }}>Inovasi Digital Ritel</Typography>
             </Stack>
             <Stack>
-              <Typography sx={{ fontWeight: 'bold' }}variant="body1">Hi, Budi</Typography>
+              <Typography sx={{ fontWeight: 'bold' }} variant="body1">Hi, Budi</Typography>
               <Typography variant="caption">Administrator</Typography>
             </Stack>
           </Toolbar>
@@ -72,10 +81,12 @@ function App() {
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
           sx={{
-            display: { sm: 'block', 'md': 'none', 'lg': 'none', 'xl': 'none' },
+            display: {
+              sm: 'block', md: 'none', lg: 'none', xl: 'none',
+            },
             width: drawerWidth,
             flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+            '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
           }}
         >
           {drawer}
@@ -83,10 +94,12 @@ function App() {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xss: 'none', xs: 'none', sm: 'none', 'md': 'block' },
+            display: {
+              xss: 'none', xs: 'none', sm: 'none', md: 'block',
+            },
             width: drawerWidth,
             flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+            '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
           }}
         >
           {drawer}
